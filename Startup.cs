@@ -1,15 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using PaymentCalculator.Services;
 
 namespace csharp_payment_calculator
 {
@@ -31,6 +26,12 @@ namespace csharp_payment_calculator
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "csharp_payment_calculator", Version = "v1" });
             });
+
+            services.AddCors();
+            services.AddOptions();
+            services.AddSingleton<PaymentService>();
+            services.AddSingleton<CrashService>();
+            services.AddSingleton<IHitCounterService, MemoryHitCounterService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -42,6 +43,8 @@ namespace csharp_payment_calculator
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "csharp_payment_calculator v1"));
             }
+
+            app.UseCors(builder => builder.AllowAnyOrigin());
 
             app.UseRouting();
 
