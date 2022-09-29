@@ -7,7 +7,9 @@ namespace csharp_payment_calculator
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            var v1 = CreateHostBuilder(args);
+            var v2 = v1.Build();
+            v2.Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -15,11 +17,6 @@ namespace csharp_payment_calculator
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                    var port = System.Environment.GetEnvironmentVariable("PORT");
-                    if (port != null) {
-                        var url = string.Concat("http://0.0.0.0:", port);
-//                        webBuilder.UseUrls(url);
-                    }
                 });
     }
 }
