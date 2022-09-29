@@ -18,7 +18,7 @@ namespace csharp_payment_calculator
                     var port = System.Environment.GetEnvironmentVariable("PORT");
                     if (port != null) {
                         var url = string.Concat("http://0.0.0.0:", port);
-                        webBuilder.UseUrls(url);
+//                        webBuilder.UseUrls(url);
                     }
                 });
     }
