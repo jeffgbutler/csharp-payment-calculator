@@ -7,9 +7,7 @@ namespace csharp_payment_calculator
     {
         public static void Main(string[] args)
         {
-            var v1 = CreateHostBuilder(args);
-            var v2 = v1.Build();
-            v2.Run();
+            CreateHostBuilder(args).Build().Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
