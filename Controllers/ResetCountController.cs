@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PaymentCalculator.Services;
+using Services;
 
-namespace PaymentCalculator.Controllers
+namespace Controllers
 {
     [Route("/[controller]")]
     [ApiController]

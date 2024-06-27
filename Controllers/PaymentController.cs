@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using PaymentCalculator.Models;
-using PaymentCalculator.Services;
+using Models;
+using Services;
 
-
-namespace PaymentCalculator.Controllers
+namespace Controllers
 {
     [Route("/[controller]")]
     [ApiController]

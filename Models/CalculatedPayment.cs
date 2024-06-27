@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PaymentCalculator.Models
+namespace Models
 {
     public class CalculatedPayment
     {
@@ -8,7 +8,7 @@ namespace PaymentCalculator.Models
         public double Rate { get; set; }
         public int Years { get; set; }
         public decimal Payment { get; set; }
-        public string Instance { get; set; }
+        public string? Instance { get; set; }
         public long Count { get; set; }
     }
 }

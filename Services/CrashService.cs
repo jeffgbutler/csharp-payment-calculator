@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-
-namespace PaymentCalculator.Services
+﻿namespace Services
 {
     public class CrashService
     {

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace PaymentCalculator.Services
+﻿namespace Services
 {
     public class MemoryHitCounterService: IHitCounterService
     {

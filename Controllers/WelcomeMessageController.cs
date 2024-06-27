@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace PaymentCalculator.Controllers
+namespace Controllers
 {
     [Route("/[controller]")]
     [ApiController]
@@ -9,7 +9,7 @@ namespace PaymentCalculator.Controllers
         [HttpGet]
         public ActionResult<string> Welcome()
         {
-            return "Hello TAP!";
+            return "Hello TP4K8S!";
         }
     }
 }
