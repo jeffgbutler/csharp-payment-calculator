@@ -5,11 +5,13 @@
 Use the following page to simulate traffic: https://jeffgbutler.github.io/payment-calculator-client/
 
 
-## Building an Image with Cloud Native Buildpacks
+# Build and Run an Image with Cloud Native Buildpacks
 
-**Important:** .Net builds are not curtrently supported on Macs with Apple Silicon
+**Important:** .Net builds are not currently supported on Macs with Apple Silicon!
 
-Pre-requisite - Docker must be installed!
+## Pre-requisites
+
+Docker must be installed!
 
 Install the pack CLI:
 
@@ -23,23 +25,19 @@ Show builders:
 pack builder suggest
 ```
 
-Set default builder:
+Set default builder (optional). If you don't do this, then you can specify the builder on a `pack` command with `--builder paketobuildpacks/builder-jammy-base`.
 
 ```shell
 pack config default-builder paketobuildpacks/builder-jammy-base
 ```
 
-Build the Image:
+## Build and Run the Image
 
-```shell
-pack build csharp-payment-calculator  --env BPE_ASPNETCORE_ENVIRONMENT=Development
-```
+| Build Type | Build Command | Run Command|
+|-------------------------|---|---|
+| Set Default Environment | `pack build csharp-payment-calculator  --env BPE_ASPNETCORE_ENVIRONMENT=Development` | `docker run --detach --publish 8080:8080 csharp-payment-calculator` |
+| No Default Environment  | `pack build csharp-payment-calculator`    | `docker run --detach --publish 8080:8080 --env ASPNETCORE_ENVIRONMENT=Development csharp-payment-calculator` |
 
-Run it...
-
-```shell
-docker run --detach --publish 8080:8080 csharp-payment-calculator
-```
 
 Sample URLs:
 
