@@ -2,15 +2,15 @@
 
 public class MemoryHitCounterService: IHitCounterService
 {
-    private long hitCount;
+    private long _hitCount;
     
     public long GetAndIncrement()
     {
-        return ++hitCount;
+        return ++_hitCount;
     }
 
     public void Reset()
     {
-        hitCount = 0;
+        _hitCount = 0;
     }
 }
