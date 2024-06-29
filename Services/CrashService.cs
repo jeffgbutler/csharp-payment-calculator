@@ -1,15 +1,14 @@
-﻿namespace Services
+﻿namespace Services;
+
+public class CrashService
 {
-    public class CrashService
+    public void CrashIt()
     {
-        public void CrashIt()
+        // ends the app after a 2-second delay
+        Task.Run(async delegate
         {
-            // ends the app after a 2 second delay
-            Task.Run(async delegate
-            {
-                await Task.Delay(2000);
-                Environment.Exit(22);
-            });
-        }
+            await Task.Delay(2000);
+            Environment.Exit(22);
+        });
     }
 }

@@ -1,24 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Services;
 
-namespace Controllers
+namespace Controllers;
+
+[Route("/[controller]")]
+[ApiController]
+public class ResetCountController(IHitCounterService hitCounterService)
 {
-    [Route("/[controller]")]
-    [ApiController]
-    public class ResetCountController
+    [HttpGet]
+    public ActionResult<string> ResetCount()
     {
-        private IHitCounterService HitCounterService;
-
-        public ResetCountController(IHitCounterService hitCounterService)
-        {
-            HitCounterService = hitCounterService;
-        }
-
-        [HttpGet]
-        public ActionResult<string> ResetCount()
-        {
-            HitCounterService.Reset();
-            return "OK";
-        }
+        hitCounterService.Reset();
+        return "OK";
     }
 }

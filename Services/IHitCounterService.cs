@@ -1,8 +1,7 @@
-﻿namespace Services
+﻿namespace Services;
+
+public interface IHitCounterService
 {
-    public interface IHitCounterService
-    {
-        long GetAndIncrement();
-        void Reset();
-    }
+    long GetAndIncrement();
+    void Reset();
 }

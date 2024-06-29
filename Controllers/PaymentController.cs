@@ -2,43 +2,31 @@
 using Models;
 using Services;
 
-namespace Controllers
+namespace Controllers;
+
+[Route("/[controller]")]
+[ApiController]
+public class PaymentController(
+    PaymentService paymentService,
+    IHitCounterService hitCounterService,
+    ILogger<PaymentController> logger)
 {
-    [Route("/[controller]")]
-    [ApiController]
-    public class PaymentController
+    [HttpGet]
+    public ActionResult<CalculatedPayment> CalculatePayment(double amount, double rate, int years)
     {
-        private PaymentService PaymentService;
-        private IHitCounterService HitCounterService;
+        var payment = paymentService.Calculate(amount, rate, years);
 
-        private readonly ILogger _logger;
+        logger.LogDebug("Calculated payment of {Payment} for input amount: {Amount}, rate: {Rate}, years: {Years}",
+            payment, amount, rate, years);
 
-        public PaymentController(PaymentService paymentService,
-                IHitCounterService hitCounterService,
-                ILogger<PaymentController> logger)
+        return new CalculatedPayment
         {
-            PaymentService = paymentService;
-            HitCounterService = hitCounterService;
-            _logger = logger;
-        }
-
-        [HttpGet]
-        public ActionResult<CalculatedPayment> calculatePayment(double Amount, double Rate, int Years)
-        {
-            var Payment = PaymentService.Calculate(Amount, Rate, Years);
-
-            _logger.LogDebug("Calculated payment of {Payment} for input amount: {Amount}, rate: {Rate}, years: {Years}",
-                Payment, Amount, Rate, Years);
-
-            return new CalculatedPayment
-            {
-                Amount = Amount,
-                Rate = Rate,
-                Years = Years,
-                Instance = "local",
-                Count = HitCounterService.GetAndIncrement(),
-                Payment = Payment
-            };
-        }
+            Amount = amount,
+            Rate = rate,
+            Years = years,
+            Instance = "local",
+            Count = hitCounterService.GetAndIncrement(),
+            Payment = payment
+        };
     }
 }

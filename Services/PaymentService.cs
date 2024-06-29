@@ -1,38 +1,30 @@
-﻿namespace Services
+﻿namespace Services;
+
+public class PaymentService
 {
-    public class PaymentService
+    public decimal Calculate(double amount, double rate, int years)
     {
-        public Decimal Calculate(double Amount, double Rate, int Years)
-        {
-            if (Rate == 0.0)
-            {
-                return CalculateWithoutInterest(Amount, Years);
-            }
-            else
-            {
-                return CalculateWithInterest(Amount, Rate, Years);
-            }
-        }
+        return rate == 0.0 ? CalculateWithoutInterest(amount, years) : CalculateWithInterest(amount, rate, years);
+    }
 
-        private Decimal CalculateWithInterest(double Amount, double Rate, int Years)
-        {
-            double monthlyRate = Rate / 100.0 / 12.0;
-            int numberOfPayments = Years * 12;
-            double payment = (monthlyRate * Amount) / (1.0 - Math.Pow(1.0 + monthlyRate,
-                -numberOfPayments));
-            return ToMoney(payment);
-        }
+    private static decimal CalculateWithInterest(double amount, double rate, int years)
+    {
+        var monthlyRate = rate / 100.0 / 12.0;
+        var numberOfPayments = years * 12;
+        var payment = (monthlyRate * amount) / (1.0 - Math.Pow(1.0 + monthlyRate,
+            -numberOfPayments));
+        return ToMoney(payment);
+    }
 
-        private Decimal CalculateWithoutInterest(double Amount, int Years)
-        {
-            int numberOfPayments = Years * 12;
-            return ToMoney(Amount / numberOfPayments);
-        }
+    private static decimal CalculateWithoutInterest(double amount, int years)
+    {
+        var numberOfPayments = years * 12;
+        return ToMoney(amount / numberOfPayments);
+    }
 
-        private Decimal ToMoney(double d)
-        {
-            Decimal bd = new Decimal(d);
-            return Decimal.Round(bd, 2, MidpointRounding.AwayFromZero);
-        }
+    private static decimal ToMoney(double d)
+    {
+        var bd = new decimal(d);
+        return decimal.Round(bd, 2, MidpointRounding.AwayFromZero);
     }
 }

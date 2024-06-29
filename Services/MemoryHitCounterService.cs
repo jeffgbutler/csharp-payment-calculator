@@ -1,16 +1,16 @@
-﻿namespace Services
-{
-    public class MemoryHitCounterService: IHitCounterService
-    {
-        private long HitCount = 0;
-        public long GetAndIncrement()
-        {
-            return ++HitCount;
-        }
+﻿namespace Services;
 
-        public void Reset()
-        {
-            HitCount = 0;
-        }
+public class MemoryHitCounterService: IHitCounterService
+{
+    private long hitCount;
+    
+    public long GetAndIncrement()
+    {
+        return ++hitCount;
+    }
+
+    public void Reset()
+    {
+        hitCount = 0;
     }
 }

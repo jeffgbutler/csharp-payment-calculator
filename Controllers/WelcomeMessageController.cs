@@ -1,15 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace Controllers
+namespace Controllers;
+
+[Route("/[controller]")]
+[ApiController]
+public class WelcomeMessageController
 {
-    [Route("/[controller]")]
-    [ApiController]
-    public class WelcomeMessageController
+    [HttpGet]
+    public ActionResult<string> Welcome()
     {
-        [HttpGet]
-        public ActionResult<string> Welcome()
-        {
-            return "Hello TP4K8S!";
-        }
+        return "Hello TP4K8S!";
     }
 }
