@@ -14,8 +14,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddCors();
-builder.Services.AddSingleton<PaymentService>();
-builder.Services.AddSingleton<CrashService>();
 
 if (builder.Environment.IsDevelopment())
 {

@@ -5,7 +5,7 @@ namespace Controllers;
 
 [Route("/[controller]")]
 [ApiController]
-public class CrashController(CrashService crashService)
+public class CrashController
 {
     /// <summary>
     /// Warning! Executing this API will crash the application.
@@ -13,7 +13,7 @@ public class CrashController(CrashService crashService)
     [HttpGet]
     public ActionResult<string> CrashIt()
     {
-        crashService.CrashIt();
+        CrashService.CrashIt();
         return "OK";
     }
 }

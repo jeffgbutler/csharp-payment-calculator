@@ -2,7 +2,7 @@
 
 public class PaymentService
 {
-    public decimal Calculate(double amount, double rate, int years)
+    public static decimal Calculate(double amount, double rate, int years)
     {
         return rate == 0.0 ? CalculateWithoutInterest(amount, years) : CalculateWithInterest(amount, rate, years);
     }

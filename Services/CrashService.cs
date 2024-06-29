@@ -2,7 +2,7 @@
 
 public class CrashService
 {
-    public void CrashIt()
+    public static void CrashIt()
     {
         // ends the app after a 2-second delay
         Task.Run(async delegate
