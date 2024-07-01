@@ -1,6 +1,6 @@
 ﻿namespace Services;
 
-public class PaymentService
+public static class PaymentService
 {
     public static decimal Calculate(double amount, double rate, int years)
     {

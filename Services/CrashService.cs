@@ -1,6 +1,6 @@
 ﻿namespace Services;
 
-public class CrashService
+public static class CrashService
 {
     public static void CrashIt()
     {
