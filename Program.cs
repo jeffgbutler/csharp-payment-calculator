@@ -22,6 +22,7 @@ if (builder.Environment.IsDevelopment())
 else
 {
     builder.Services.AddDistributedRedisCache(builder.Configuration);
+    builder.Services.AddSingleton<IHitCounterService, RedisHitCounterService>();
 }
 
 var app = builder.Build();
