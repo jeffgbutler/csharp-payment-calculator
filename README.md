@@ -4,6 +4,16 @@
 
 Use the following page to simulate traffic: https://jeffgbutler.github.io/payment-calculator-client/
 
+## Steeltoe
+
+This application use the Steeltoe (https://steeltoe.io/) package to add these specific capabilities:
+
+1. We use the Steeltoe Management extension (https://docs.steeltoe.io/api/v3/management/) to add URL endpoints
+   useful for monitoring the application. These endpoints are also used by several Tanzu consoles to report application
+   health and to enable other capabilities. 
+2. We use the Steeltoe Redis connector (https://docs.steeltoe.io/api/v3/connectors/redis.html) to attach the application
+   to a Redis database when running in production.
+
 ## Application Environments and Redis
 
 When the application is run in the "Development" environment, then the application will use an in-memory cache
@@ -42,19 +52,19 @@ pack config default-builder paketobuildpacks/builder-jammy-base
 
 This will create/update an image named "csharp-payment-calculator" in your local Docker registry:
 
-| Build Type              | Build Command                                                                        |
-|-------------------------|--------------------------------------------------------------------------------------|
-| Set Default Environment | `pack build csharp-payment-calculator  --env BPE_ASPNETCORE_ENVIRONMENT=Development` |
-| No Default Environment  | `pack build csharp-payment-calculator`                                               |
+| Build Type                | Build Command                                                                        |
+|---------------------------|--------------------------------------------------------------------------------------|
+| Set a Default Environment | `pack build csharp-payment-calculator  --env BPE_ASPNETCORE_ENVIRONMENT=Development` |
+| No Default Environment    | `pack build csharp-payment-calculator`                                               |
 
 ## Run the Application in Docker Without Redis
 
 This is used for a quick test and does not connect to Redis:
 
-| Build Type              | Run Command                                                                                                  |
-|-------------------------|--------------------------------------------------------------------------------------------------------------|
-| Set Default Environment | `docker run --detach --publish 8080:8080 csharp-payment-calculator`                                          |
-| No Default Environment  | `docker run --detach --publish 8080:8080 --env ASPNETCORE_ENVIRONMENT=Development csharp-payment-calculator` |
+| Build Type                  | Run Command                                                                                                  |
+|-----------------------------|--------------------------------------------------------------------------------------------------------------|
+| Use the Default Environment | `docker run --detach --publish 8080:8080 csharp-payment-calculator`                                          |
+| Specify an Environment      | `docker run --detach --publish 8080:8080 --env ASPNETCORE_ENVIRONMENT=Development csharp-payment-calculator` |
 
 
 Sample URLs:
@@ -76,7 +86,10 @@ Deploy redis:
 docker run --name redis --detach --network payment-calculator-network redis
 ```
 
-Deploy the application:
+Deploy the application. This command tells the application where to find Redis. By default, the Steeltoe connector
+will look for Redis at "localhost:6379".
+
+See this page for details about the properties that can be specified for the Redis connector: https://docs.steeltoe.io/api/v3/connectors/redis.html
 
 ```shell
 docker run --detach --publish 8080:8080 --network payment-calculator-network --env Redis__Client__Host=redis csharp-payment-calculator
