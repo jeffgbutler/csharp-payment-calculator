@@ -82,7 +82,8 @@ will look for Redis at "localhost:6379".
 connector: https://docs.steeltoe.io/api/v3/connectors/redis.html)
 
 ```shell
-docker run --detach --publish 8080:8080 --network payment-calculator-network --env Redis__Client__Host=redis csharp-payment-calculator
+docker run --detach --publish 8080:8080 --network payment-calculator-network \
+  --env Redis__Client__Host=redis csharp-payment-calculator
 ```
 
 Sample URLs:
@@ -97,7 +98,8 @@ Push app into an accessible registry. I'm using Harbor, change the following as 
 ```shell
 docker login harbor.tanzuathome.net
 
-docker tag csharp-payment-calculator:latest harbor.tanzuathome.net/library/csharp-payment-calculator:latest
+docker tag csharp-payment-calculator:latest \
+  harbor.tanzuathome.net/library/csharp-payment-calculator:latest
 
 docker push harbor.tanzuathome.net/library/csharp-payment-calculator:latest
 ```
@@ -126,8 +128,8 @@ Test URLs:
 
 If you have a LoadBalancer, you can hit the following URLs:
 
-- http://<external ip>/swagger/index.html
-- http://<external ip>/actuator
+- http://&lt;external ip&gt;/swagger/index.html
+- http://&lt;external ip&gt;/actuator
 
 Else, you can curl at the port forward:
 
@@ -191,8 +193,8 @@ Test URLs:
 
 If you have a LoadBalancer, you can hit the following URLs:
 
-- http://<external ip>/swagger/index.html
-- http://<external ip>/actuator
+- http://&lt;external ip&gt;/swagger/index.html
+- http://&lt;external ip&gt;/actuator
 
 Else, you can curl at the port forward:
 
