@@ -89,7 +89,8 @@ docker run --name redis --detach --network payment-calculator-network redis
 Deploy the application. This command tells the application where to find Redis. By default, the Steeltoe connector
 will look for Redis at "localhost:6379".
 
-See this page for details about the properties that can be specified for the Redis connector: https://docs.steeltoe.io/api/v3/connectors/redis.html
+(See this page for details about the properties that can be specified for the Redis
+connector: https://docs.steeltoe.io/api/v3/connectors/redis.html)
 
 ```shell
 docker run --detach --publish 8080:8080 --network payment-calculator-network --env Redis__Client__Host=redis csharp-payment-calculator
