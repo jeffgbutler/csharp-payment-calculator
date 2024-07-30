@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-calculator
+  labels:
+    app: payment-calculator
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: payment-calculator
+  template:
+    metadata:
+      labels:
+        app: payment-calculator
+    spec:
+      containers:
+        - name: payment-calculator
+          image: harbor.tanzuathome.net/library/csharp-payment-calculator
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Development

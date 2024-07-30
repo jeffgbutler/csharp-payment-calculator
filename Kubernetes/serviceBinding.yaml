@@ -1,0 +1,14 @@
+apiVersion: servicebinding.io/v1
+kind: ServiceBinding
+metadata:
+  name: payment-calculator-redis
+spec:
+  name: redis
+  service:
+    apiVersion: v1
+    kind: Secret
+    name: my-redis-svcbind
+  workload:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: payment-calculator
