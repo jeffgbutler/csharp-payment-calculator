@@ -20,7 +20,11 @@ When the application is run in the "Development" environment, then the applicati
 for a hit counter. This is used to demonstrate the dangers of doing such a thing - if multiple instances run then
 the hit counters will not be in syncAnd the hit counter will not persist.
 
-In other environments, the application will connect to a Redis instances for the hit counter.
+In other environments, the application will attempt to connect to a Redis instances for the hit counter. By default,
+the application will attempt to connect to redis at "localhost:6379". We will show how to change that where appropriate.
+
+Also note that the application will respect a service binding (https://servicebinding.io/) if one is available on a
+Kubernetes cluster.
 
 ## Build an Image with Cloud Native Buildpacks
 
@@ -36,36 +40,21 @@ Install the pack CLI:
 brew install buildpacks/tap/pack
 ```
 
-Show builders:
-
-```shell
-pack builder suggest
-```
-
-Set default builder (optional). If you don't do this, then you can specify the builder on a `pack` command with `--builder paketobuildpacks/builder-jammy-base`.
-
-```shell
-pack config default-builder paketobuildpacks/builder-jammy-base
-```
-
 ### Build the Application
 
 This will create/update an image named "csharp-payment-calculator" in your local Docker registry:
 
-| Build Type                | Build Command                                                                        |
-|---------------------------|--------------------------------------------------------------------------------------|
-| Set a Default Environment | `pack build csharp-payment-calculator  --env BPE_ASPNETCORE_ENVIRONMENT=Development` |
-| No Default Environment    | `pack build csharp-payment-calculator`                                               |
+```shell
+pack build csharp-payment-calculator --builder paketobuildpacks/builder-jammy-base
+```
 
 ## Run the Application in Docker Without Redis
 
 This is used for a quick test and does not connect to Redis:
 
-| Build Type                  | Run Command                                                                                                  |
-|-----------------------------|--------------------------------------------------------------------------------------------------------------|
-| Use the Default Environment | `docker run --detach --publish 8080:8080 csharp-payment-calculator`                                          |
-| Specify an Environment      | `docker run --detach --publish 8080:8080 --env ASPNETCORE_ENVIRONMENT=Development csharp-payment-calculator` |
-
+```shell
+docker run --detach --publish 8080:8080 --env ASPNETCORE_ENVIRONMENT=Development csharp-payment-calculator
+```
 
 Sample URLs:
 
@@ -100,3 +89,128 @@ Sample URLs:
 
 - http://192.168.128.23:8080/swagger/index.html
 - http://192.168.128.23:8080/actuator
+
+## Run the Application in Kubernetes
+
+Push app into an accessible registry. I'm using Harbor, change the following as applicable for your environment:
+
+```shell
+docker login harbor.tanzuathome.net
+
+docker tag csharp-payment-calculator:latest harbor.tanzuathome.net/library/csharp-payment-calculator:latest
+
+docker push harbor.tanzuathome.net/library/csharp-payment-calculator:latest
+```
+
+### Run the Application in Kubernetes Without Redis
+
+Deploy app with in memory cache (you will need to change the image link for your registry):
+
+```shell
+kubectl apply -f Kubernetes/deployment-in-memory.yaml
+```
+
+If you have a loadBalancer service available, then:
+
+```shell
+kubectl apply -f Kubernetes/service.yaml
+```
+
+Else:
+
+```shell
+kubectl port-forward deployment/payment-calculator 28015:8080
+```
+
+Test URLs:
+
+If you have a LoadBalancer, you can hit the following URLs:
+
+- http://<external ip>/swagger/index.html
+- http://<external ip>/actuator
+
+Else, you can curl at the port forward:
+
+```shell
+curl localhost:28015/actuator/health
+
+curl "localhost:28015/Payment?amount=100000&rate=2&years=30"
+```
+
+When you run the payment service with an in-memory cache, the hit counter will start at 1.
+
+
+### Run the Application in Kubernetes with Redis
+
+(This can be done in Kind)
+
+Install cert manager:
+
+```shell
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.15.2/cert-manager.yaml
+```
+
+Install the service binding operator:
+
+```shell
+kubectl apply -f https://github.com/servicebinding/runtime/releases/download/v1.0.0/servicebinding-runtime-v1.0.0.yaml
+```
+
+Install Redis - we're using the Bitnami helm chart here because it will create the secret needed for the service binding:
+
+```shell
+helm install my-redis oci://registry-1.docker.io/bitnamicharts/redis \
+  --set serviceBindings.enabled=true,architecture=standalone,auth.enabled=false 
+```
+
+Deploy app with Redis (you will need to change the image link for your registry):
+
+```shell
+kubectl apply -f Kubernetes/deployment-redis.yaml
+```
+
+Add the service binding to Redis:
+
+```shell
+kubectl apply -f Kubernetes/serviceBinding.yaml
+```
+
+If you have a loadBalancer service available, then:
+
+```shell
+kubectl apply -f Kubernetes/service.yaml
+```
+
+Else:
+
+```shell
+kubectl port-forward deployment/payment-calculator 28015:8080
+```
+
+Test URLs:
+
+If you have a LoadBalancer, you can hit the following URLs:
+
+- http://<external ip>/swagger/index.html
+- http://<external ip>/actuator
+
+Else, you can curl at the port forward:
+
+```shell
+curl localhost:28015/actuator/health
+
+curl "localhost:28015/Payment?amount=100000&rate=2&years=30"
+```
+
+When you run the payment service with an in-memory cache, the hit counter will start at 5000.
+
+## Redis Debug
+
+Run redis command line in Docker:
+
+```shell
+kubectl run redis-cli -it --image=redis --restart=Never --rm=true -- sh
+
+redis-cli -h my-redis-master -p 6379
+```
+
