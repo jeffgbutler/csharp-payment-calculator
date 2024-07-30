@@ -20,6 +20,7 @@
     <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="6.0.*" />
     <PackageReference Include="Steeltoe.Connector.ConnectorCore" Version="$(SteeltoeVersion)" />
     <PackageReference Include="Steeltoe.Management.EndpointCore" Version="$(SteeltoeVersion)" />
+    <PackageReference Include="Steeltoe.Extensions.Configuration.Kubernetes.ServiceBinding" Version="$(SteeltoeVersion)" />
   </ItemGroup>
 
 </Project>
