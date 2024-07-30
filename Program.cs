@@ -2,8 +2,10 @@ using Services;
 using Steeltoe.Connector.Redis;
 using Steeltoe.Extensions.Logging;
 using Steeltoe.Management.Endpoint;
+using Steeltoe.Extensions.Configuration.Kubernetes.ServiceBinding;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Configuration.AddKubernetesServiceBindings();
 
 builder.Logging.AddDynamicConsole();
 
