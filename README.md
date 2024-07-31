@@ -1,30 +1,39 @@
 # C# Payment Calculator
 
-.Net application that implements a loan payment calculator.
+.Net application that implements a loan payment calculator. The application includes a hit counter that can
+either use an in-memory cache, or connect to Redis.
 
 Use the following page to simulate traffic: https://jeffgbutler.github.io/payment-calculator-client/
 
 ## Steeltoe
 
-This application use the Steeltoe (https://steeltoe.io/) package to add these specific capabilities:
+This application uses the Steeltoe (https://steeltoe.io/) package to add these specific capabilities:
 
 1. We use the Steeltoe Management extension (https://docs.steeltoe.io/api/v3/management/) to add URL endpoints
    useful for monitoring the application. These endpoints are also used by several Tanzu consoles to report application
    health and to enable other capabilities. 
 2. We use the Steeltoe Redis connector (https://docs.steeltoe.io/api/v3/connectors/redis.html) to attach the application
-   to a Redis database when running in production.
+   to a Redis database when running in production. The connector will use a Kubernetes service binding if one is
+   available.
 
 ## Application Environments and Redis
 
 When the application is run in the "Development" environment, then the application will use an in-memory cache
 for a hit counter. This is used to demonstrate the dangers of doing such a thing - if multiple instances run then
-the hit counters will not be in syncAnd the hit counter will not persist.
+the hit counters will not be in sync and the hit counter will not persist.
 
 In other environments, the application will attempt to connect to a Redis instances for the hit counter. By default,
 the application will attempt to connect to redis at "localhost:6379". We will show how to change that where appropriate.
 
 Also note that the application will respect a service binding (https://servicebinding.io/) if one is available on a
 Kubernetes cluster.
+
+- [Build the Image](#build-an-image-with-cloud-native-buildpacks)
+- [Run in Docker without Redis](#run-the-application-in-docker-without-redis)
+- [Run in Docker with Redis](#run-the-application-in-docker-with-redis)
+- [Run in Kubernetes](#run-the-application-in-kubernetes)
+  - [Run in Kubernetes without Redis](#run-the-application-in-kubernetes-without-redis)
+  - [Run in Kubernetes with Redis](#run-the-application-in-docker-with-redis)
 
 ## Build an Image with Cloud Native Buildpacks
 
@@ -58,8 +67,8 @@ docker run --detach --publish 8080:8080 --env ASPNETCORE_ENVIRONMENT=Development
 
 Sample URLs:
 
-- http://192.168.128.23:8080/swagger/index.html
-- http://192.168.128.23:8080/actuator
+- http://localhost:8080/swagger/index.html
+- http://localhost:8080/actuator
 
 ## Run the Application in Docker With Redis
 
@@ -76,7 +85,7 @@ docker run --name redis --detach --network payment-calculator-network redis
 ```
 
 Deploy the application. This command tells the application where to find Redis. By default, the Steeltoe connector
-will look for Redis at "localhost:6379".
+will look for Redis at "localhost:6379", so we'll need to change that.
 
 (See this page for details about the properties that can be specified for the Redis
 connector: https://docs.steeltoe.io/api/v3/connectors/redis.html)
@@ -88,12 +97,13 @@ docker run --detach --publish 8080:8080 --network payment-calculator-network \
 
 Sample URLs:
 
-- http://192.168.128.23:8080/swagger/index.html
-- http://192.168.128.23:8080/actuator
+- http://localhost:8080/swagger/index.html
+- http://localhost:8080/actuator
 
 ## Run the Application in Kubernetes
 
-Push app into an accessible registry. I'm using Harbor, change the following as applicable for your environment:
+Push app into an accessible registry. I'm using a private Harbor installation, change the following as applicable for
+your environment:
 
 ```shell
 docker login harbor.tanzuathome.net
@@ -177,7 +187,7 @@ Add the service binding to Redis:
 kubectl apply -f Kubernetes/serviceBinding.yaml
 ```
 
-If you have a loadBalancer service available, then:
+If you have a load balancer service available, then:
 
 ```shell
 kubectl apply -f Kubernetes/service.yaml
