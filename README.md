@@ -33,7 +33,7 @@ Kubernetes cluster.
 - [Run in Docker with Redis](#run-the-application-in-docker-with-redis)
 - [Run in Kubernetes](#run-the-application-in-kubernetes)
   - [Run in Kubernetes without Redis](#run-the-application-in-kubernetes-without-redis)
-  - [Run in Kubernetes with Redis](#run-the-application-in-docker-with-redis)
+  - [Run in Kubernetes with Redis](#run-the-application-in-kubernetes-with-redis)
 
 ## Build an Image with Cloud Native Buildpacks
 
